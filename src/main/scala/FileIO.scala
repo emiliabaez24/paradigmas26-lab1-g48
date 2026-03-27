@@ -1,32 +1,20 @@
 import scala.io.Source
-import scala.util.Using
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
 object FileIO {
-  type Subscription = (String, String) // (subreddit name, url)
-
-  implicit val foramts: Formats = DefaultFormats
-
   // Pure function to read subscriptions from a JSON file
+  
   def readSubscriptions(): List[Subscription] = {
-
-    // leemos de forma segura para no dejar resource leaks.
-    val jsonString = Using(Source.fromFile("subscriptions.json")) {source =>
-      source.mkString
-    }.getOrElse("[]")
-    
-    // parseamos el texto a un objeto JSON
-    val parsedJson = parse(jsonString)
-
-    val subscriptions = parsedJson.children.map { elemento =>
-      val name = (elemento \ "name").extract[String]
-      val url = (elemento \ "url").extract[String]
-
-      (name, url)
+    val source = Source.fromFile("subscriptions.json")  //abro el archivo
+    val textSubscriptions =source.mkString // paso todo el archivo a un bloque de String
+    source.close() // cierro el archivo para no tener resource leaks
+    val json = parse(textSubscriptions) //Convierto el texto en JSON
+    val listMap = json.extract[List[Map[String, String]]](DefaultFormats) //Extraemos el JSON a una lista
+    val subscriptionsList = listMap.map { 
+      dict => (dict("name"), dict("url"))   //hago que ahora retorne lo que yo quiero
     }
-    
-    subscriptions
+    subscriptionsList //Devuelve la Lista que me pide el ejercicio
   }
 
   // Pure function to download JSON feed from a URL
