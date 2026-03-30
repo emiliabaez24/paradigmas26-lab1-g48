@@ -4,10 +4,14 @@ object Main {
 
     val subscriptions: List[FileIO.Subscription] = FileIO.readSubscriptions()
 
-    val allPosts: List[(String, String)] = subscriptions.map { case (name, url) =>
+    val allPosts: List[(String, String)] = subscriptions.flatMap { case (name, url) => 
       println(s"Fetching posts from: $name ($url)")
-      val posts = FileIO.downloadFeed(url)
-      (url, posts)
+      val tryDownloading = FileIO.downloadFeed(url)
+      
+      tryDownloading match { //Intento abrir el contenido con pattern matching
+        case Some(posts) => List((url, posts)) 
+        case None => List.empty 
+      }
     }
 
     // val output = allPosts

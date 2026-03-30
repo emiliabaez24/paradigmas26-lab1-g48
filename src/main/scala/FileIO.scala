@@ -20,9 +20,15 @@ object FileIO {
   }
 
   // Pure function to download JSON feed from a URL
-  def downloadFeed(url: String): String = {
-    val source = Source.fromURL(url)
-    source.mkString
+  def downloadFeed(url: String): Option[String] = { 
+    try {
+      val source = Source.fromURL(url)//Intento conectar a internet y descargar el texto
+      val downloadedText = source.mkString //Guardo el contenido de la URL en un unico string continuo.
+      source.close()//Cierro la conexion
+      Some(downloadedText)//En caso de no tener algun error retorna el contenido
+      } catch {
+        case error: Exception => None//En caso de cualquier error retorna el contenido vacio
+      }
   }
 
   type Post = (String, String, String, String)
