@@ -10,16 +10,18 @@ object Main {
       (url, posts)
     }
 
-    val output = allPosts
-      .map { case (url, posts) => Formatters.formatSubscription(url, posts) }
-      .mkString("\n")
+    // val output = allPosts
+    //   .map { case (url, posts) => Formatters.formatSubscription(url, posts) }
+    //   .mkString("\n")
 
-    println(header)
-    println(output)
+    // println(header)
+    // println(output)
 
     val outputParseado = allPosts.map { case (url, postsCrudos) =>    //Recorro el allPosts que ya tiene los JSON descargados
       val listaDePosts: List[FileIO.Post] = FileIO.parsePost(postsCrudos)      //Paso el texto a una nueva máquina de parseo
-      val postsFormateados = listaDePosts.map { post =>       //Formateo cada post individualmente
+      val postsFiltrados: List[FileIO.Post] = TextProcessing.filterPosts(listaDePosts) //filtro los posts invalidos
+
+      val postsFormateados = postsFiltrados.map { post =>       //Formateo cada post individualmente
         val (subreddit, title, selftext, date) = post 
         Formatters.formatPost(title, selftext, date) 
       }.mkString("\n")
