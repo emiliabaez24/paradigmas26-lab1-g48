@@ -34,17 +34,21 @@ object FileIO {
   type Post = (String, String, String, String, Int) // (subreddit, title, selftext, date, score)
 
   def parsePost(Text: String): List[Post] = {
-    implicit val formats: Formats = DefaultFormats // formatos se pasan como implicito
-    val json = parse(Text) // convierto el texto en json para poder manipularlo
-    val postsArray = (json \ "data" \ "children").children //Me ubico directo a la lista de posts
-    val listaDePosts: List[Post] = postsArray.map { postJson => //Empiezo a ubicar los campos con map para extraerlos
-      val subreddit = (postJson \ "data" \ "subreddit").extract[String] //Ubico y guardo con extract el subreddit
-      val title = (postJson \ "data" \ "title").extract[String] //Ubico y guardo el title con extract
-      val selftext = (postJson \ "data" \ "selftext").extract[String] //Ubico y guardo el selftext con extract
-      val createdUtc = (postJson \ "data" \ "created_utc").extract[Double].toLong //Ubico y guardo el utc
-      val date = TextProcessing.formatDateFromUTC(createdUtc) //Convierto el double a un string donde figure la fecha y la hora
-      (subreddit, title, selftext, date) //Devuelvo la tupla con los campos  
+    implicit val formats: Formats = DefaultFormats 
+    val json = parse(Text) 
+    val postsArray = (json \ "data" \ "children").children 
+    
+    val listaDePosts: List[Post] = postsArray.map { postJson => 
+      val subreddit = (postJson \ "data" \ "subreddit").extract[String] 
+      val title = (postJson \ "data" \ "title").extract[String] 
+      val selftext = (postJson \ "data" \ "selftext").extract[String] 
+      val createdUtc = (postJson \ "data" \ "created_utc").extract[Double].toLong 
+      val date = TextProcessing.formatDateFromUTC(createdUtc) 
+      
+      val score = (postJson \ "data" \ "score").extract[Int] 
+      
+      (subreddit, title, selftext, date, score)  
     }
-  listaDePosts // Retorno la lista que me pide el ejercicio
-  }
+    listaDePosts 
+}
 }

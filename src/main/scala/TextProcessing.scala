@@ -21,7 +21,7 @@ object TextProcessing {
   }
 
   def isValidPost(post: FileIO.Post): Boolean = {
-    val(_, title, selftext, _) = post
+    val(_, title, selftext, _, _) = post
     isValid(title) && isValid(selftext) 
   }
 

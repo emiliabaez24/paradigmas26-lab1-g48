@@ -37,7 +37,7 @@ object TextAnalytics{
 
         // Aplicar los filtros requeridos por la consigna
         val validWords = words.filter{ word =>
-            val startsWithUpper = word.headOptions.exists(_isUpper)
+            val startsWithUpper = word.headOption.exists(_.isUpper)
             val isNotStopword = !stopWords.contains(word.toLowerCase)
 
             startsWithUpper && isNotStopword
