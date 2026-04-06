@@ -32,7 +32,7 @@ object Main {
       s"--- Posts extraídos de: $url ---\n" + postsFormateados       //Retornamos el bloque de texto para esta URL
     }.mkString("\n\n") //Separamos los bloques de diferentes URLs con un salto de línea
     println(outputParseado)    //Imprimimos el resultado final
-  }
+  
    //Agregado para punto estrella
     println("\n" + "=" * 40)
     val respuesta = scala.io.StdIn.readLine("¿Desea ingresar al Menú Interactivo de Lectura? (S/N): ")
@@ -46,5 +46,6 @@ object Main {
     } else { //sino imprimo mensaje de despedida y me las tomo!!.
       println("Fin de la ejecución. ¡Hasta pronto!")
     }
+  }
 }
 
