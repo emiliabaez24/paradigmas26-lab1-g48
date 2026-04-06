@@ -31,7 +31,7 @@ object FileIO {
       }
   }
 
-  type Post = (String, String, String, String)
+  type Post = (String, String, String, String, Int) // (subreddit, title, selftext, date, score)
 
   def parsePost(Text: String): List[Post] = {
     implicit val formats: Formats = DefaultFormats // formatos se pasan como implicito
