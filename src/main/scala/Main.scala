@@ -26,11 +26,25 @@ object Main {
       val postsFiltrados: List[FileIO.Post] = TextProcessing.filterPosts(listaDePosts) //filtro los posts invalidos
 
       val postsFormateados = postsFiltrados.map { post =>       //Formateo cada post individualmente
-        val (subreddit, title, selftext, date) = post 
+        val (subreddit, title, selftext, date, _) = post 
         Formatters.formatPost(title, selftext, date) 
       }.mkString("\n")
       s"--- Posts extraídos de: $url ---\n" + postsFormateados       //Retornamos el bloque de texto para esta URL
     }.mkString("\n\n") //Separamos los bloques de diferentes URLs con un salto de línea
     println(outputParseado)    //Imprimimos el resultado final
   }
+   //Agregado para punto estrella
+    println("\n" + "=" * 40)
+    val respuesta = scala.io.StdIn.readLine("¿Desea ingresar al Menú Interactivo de Lectura? (S/N): ")
+
+    if (respuesta.toLowerCase == "s") { //si se desea entrar adapto los datos de entrada y llamo a mi funcion.
+      val subsParaMenu = subscriptions.map(_.asInstanceOf[(String, String)]) //aca agarro toda mi lista de suibscripciones y 
+                                                                             //las envio a una nueva lista con formato (Nombre, URL)
+      val postsParaMenu = allPosts.map(tupla => tupla._2) //aca ignoro la primer tupla que son los url, y agarro el texto en JSON
+      
+      UserInterface.mostrarMenu(subsParaMenu, postsParaMenu) //llamo a mi funcion con las variables ya corregidas para que ande el programa.
+    } else { //sino imprimo mensaje de despedida y me las tomo!!.
+      println("Fin de la ejecución. ¡Hasta pronto!")
+    }
 }
+
