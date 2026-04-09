@@ -38,17 +38,23 @@ object FileIO {
     val json = parse(Text) 
     val postsArray = (json \ "data" \ "children").children 
     
-    val listaDePosts: List[Post] = postsArray.map { postJson => 
-      val subreddit = (postJson \ "data" \ "subreddit").extract[String] 
-      val title = (postJson \ "data" \ "title").extract[String] 
-      val selftext = (postJson \ "data" \ "selftext").extract[String] 
-      val createdUtc = (postJson \ "data" \ "created_utc").extract[Double].toLong 
-      val date = TextProcessing.formatDateFromUTC(createdUtc) 
-      
-      val score = (postJson \ "data" \ "score").extract[Int] 
-      
-      (subreddit, title, selftext, date, score)  
+    val listaDePosts: List[Post] = postsArray.flatMap { postJson => 
+      try{
+        val subreddit = (postJson \ "data" \ "subreddit").extract[String] 
+        val title = (postJson \ "data" \ "title").extract[String] 
+        val selftext = (postJson \ "data" \ "selftext").extract[String] 
+        val createdUtc = (postJson \ "data" \ "created_utc").extract[Double].toLong 
+        val date = TextProcessing.formatDateFromUTC(createdUtc) 
+        
+        val score = (postJson \ "data" \ "score").extract[Int] 
+        
+        Some((subreddit, title, selftext, date, score)) 
+      }
+      catch {
+        case _: Exception => None 
+      }
     }
+
     listaDePosts 
-}
+  }
 }
